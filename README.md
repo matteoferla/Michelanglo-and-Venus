@@ -2,6 +2,7 @@
 Topmost repository for the Michelaɴɢʟo webapp, including the Venus functionality.
 
 > Data re-orgainisation in progress (5 Oct 2021)
+> The plan is to have app deployment here.
 
 App: https://michelanglo.sgc.ox.ac.uk/
 
