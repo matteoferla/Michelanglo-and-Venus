@@ -1,10 +1,7 @@
 # Michelanglo-and-Venus
-Topmost repository for the Michelaɴɢʟo webapp, including the Venus functionality.
+Topmost repository for [the Michelaɴɢʟo webapp](https://michelanglo.sgc.ox.ac.uk/), including the Venus functionality.
 
 > Data re-orgainisation in progress (5 Oct 2021)
-> The plan is to have app deployment here.
-
-App: https://michelanglo.sgc.ox.ac.uk/
 
 ## Overview
 Michelaɴɢʟo is a complex web app built in Python3 with the Pyramid framework that uses backed both PyMOL and PyRosetta,
@@ -22,7 +19,15 @@ As a consequence, instead of having an unwieldy monolithic repository, it is spl
 Each of these has their own documentation. For the app, the site contains user-focused documentation, 
 while the GitHub contains technical documentation.
 
-The API can be run on its own and can be pip-installed via `pip3 install michelanglo-api`.
+The client-side Python API (technically an SDK) can be run on its own and can be pip-installed via `pip3 install michelanglo-api`.
 
-The protein analysis module (usable without the app) can be used without the parsed Uniprot/gnomAD/PSP/etc data
+The [protein analysis module](https://github.com/matteoferla/MichelaNGLo-protein-module) (usable without the app) can be used without the parsed Uniprot/gnomAD/PSP/etc data
 for certain operations.
+
+## Michelanglo/Venus deployment
+
+For deployment notes of the web app and all the required submodules, see [app_deployment notes](app_deployment.md).
+For a quick deployment run
+
+    MIKE_SECRETCODE MIKE_SQL_URL
+    wget -O - https://raw.githubusercontent.com/matteoferla/Michelanglo-and-Venus/main/app_deployment.sh | bash
