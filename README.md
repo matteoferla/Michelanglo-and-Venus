@@ -25,7 +25,46 @@ for certain operations.
 ## Michelanglo/Venus deployment
 
 For deployment notes of the web app and all the required submodules, see [app_deployment notes](app_deployment.md).
-For a quick deployment run
+For a quick and blind deployment run
 
-    MIKE_SECRETCODE MIKE_SQL_URL
-    wget -O - https://raw.githubusercontent.com/matteoferla/Michelanglo-and-Venus/main/app_deployment.sh | bash
+    wget -O - https://raw.githubusercontent.com/matteoferla/Michelanglo-and-Venus/main/app_deployment.sh | bash -
+    
+
+## Folder structure
+
+The folder structure of the full stack would looks like:
+
+1. michelanglo/app
+2. michelanglo/analysis
+3. michelanglo/transpiler
+4. michelanglo/protein-data
+5. michelanglo/user-data
+    
+The first three repos contain python3.7+ modules which will have been installed.
+Unless they were installed in develop mode, they reside with
+the other python modules, so could be deleted, with the caveat that three extra files may be used in the app repo.
+
+* `demo.db` is a example sql database
+* `*.ini` are config files
+* `app.py` is a small snippet that loads the app and runs it with waitress.
+
+For a note about basics of running a Pyramid application see [app serving](app_serving.md).
+
+The folder `user-data` is created by the application at runtime
+in the location specified by config setting `michelanglo.protein_data_folder`.
+
+The folder `protein-data` should have been created by running `create.py` of the analysis module,
+or by uncompressing the human dataset —location specified by config setting `michelanglo.user_data_folder`.
+
+If the protein analysis module is being run by itself, then it is specified in the `global_settings`
+object —same as `Protein.settings` etc. Say: 
+
+    from michelanglo_protein import global_settings, Structure, ProteinAnalyser
+    global_settings.startup('/👾👾/👾👾👾/michelanglo/protein-data')
+    
+    protein = ProteinAnalyser(uniprot='👾👾👾')
+    protein.mutation = Mutation('👾👾👾')
+    ddG = protein.analyse_FF()
+
+For more, see the relevant modules.
+                          
