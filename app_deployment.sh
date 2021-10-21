@@ -27,21 +27,29 @@ rm a.tar.bz2
 
 mkdir michelanglo
 cd michelanglo/
-git clone --recursive https://github.com/matteoferla/MichelaNGLo.git app
-git clone https://github.com/matteoferla/MichelaNGLo-protein-analysis.git protein-analysis
-git clone https://github.com/matteoferla/MichelaNGLo-transpiler transpiler
-cd protein-analysis
+
+git clone https://github.com/matteoferla/MichelaNGLo-protein-analysis.git analysis
+cd analysis
 python setup.py install
 #python create.py & #do this to get protein data. else:
 mkdir ../protein-data
 mkdir ../protein-data/reference
 touch ../protein-data/reference/pdb_chain_uniprot.tsv
 # end of hacky way round.
+
+git clone https://github.com/matteoferla/MichelaNGLo-transpiler transpiler
 cd ../transpiler
 python setup.py install
-cd ../app
-python setup.py install
+
+# if you have a licence for font awesome do:
+#git clone --recursive https://github.com/matteoferla/MichelaNGLo.git app
+git clone https://github.com/matteoferla/MichelaNGLo.git app
+# https://github.com/FortAwesome/Font-Awesome
+cd app
+sed -i 's/Font-Awesome-Pro\.git/Font-Awesome\.git/g' .gitmodules
+git submodule update --init --recursive
 npm install
 cp demo.db mike.db
 cp production.ini actual.ini
+
 python app.py --config actual.ini > ../mike.log 2>&1

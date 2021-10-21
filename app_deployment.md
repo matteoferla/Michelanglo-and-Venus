@@ -167,7 +167,7 @@ Installing it isn't needed for normal operations, just esthetics.
 Else:
 
     git clone https://github.com/matteoferla/MichelaNGLo.git app
-    https://github.com/FortAwesome/Font-Awesome
+    # https://github.com/FortAwesome/Font-Awesome
     sed -i 's/Font-Awesome-Pro\.git/Font-Awesome\.git/g' .gitmodules
     git submodule update --init --recursive
     python3 setup.py install
@@ -175,7 +175,8 @@ Else:
 Note that you'll also need to change all instances of the class `far` with `fas` in the templates
 by adding `<script>$('.far').addClass('fas').removeClass('far')</script>` near the bottom of `templates/layout_components/layout.mako` 
 (There is a common giving more info within there).
-If this is too much faff just drop matteo dot ferla at gmail an email.
+The option of searching `Font-Awesome-Pro` or `FA5` in GitHub is not recommended 
+as these public forks are in violation of copyright of a small startup team not a megacorporation.
 
 ## Step 4. Generate the data
 It also uses a protein module to allow gene name querying.
