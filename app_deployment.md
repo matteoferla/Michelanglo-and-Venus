@@ -29,6 +29,11 @@ Install modules in a folder called michelanglo:
     python3 setup.py install
     npm i puppeteer # installs puppeteer, but you will have to decide about the chromium sandboxing
     npm i fs-extra
+    ## For Jquery to be added to the offline download it needs to be compiled.
+    CURRENT_PATH=`pwd`
+    cd app/michelanglo_app/static/ThirdParty/jquery
+    npm run build
+    cd $CURRENT_PATH
     # do not want sqlite? change the env variable accordingly and read below
     cp demo.db mike.db
     PROTEIN_DATA='../protein-data' SECRETCODE='needed-for-remote-reset' SQL_URL='sqlite:///mike.db' SLACK_WEBHOOK='https://hooks.slack.com/services/xxx/xxx/xxx' python3 app.py > ../mike.log 2>&1
@@ -78,7 +83,7 @@ Michelanglo has lots of moving parts...
 
 ## Step 1. Prerequisites
 
-Linux packages
+Linux packages. `apt` for Ubuntu, `yum` for CentOS.
 
     sudo apt install nodejs
     sudo apt install npm
@@ -142,7 +147,7 @@ Both the protein module and Michelanglo require a PyMOL manipulation script, whc
 
     mkdir michelanglo
     cd michelanglo/
-    git clone https://github.com/matteoferla/MichelaNGLo-protein-module.git protein-module
+    git clone https://github.com/matteoferla/MichelaNGLo-protein-analysis.git protein-analysis
     cd protein-module
     python3 setup.py install
     git clone https://github.com/matteoferla/MichelaNGLo-transpiler transpiler
@@ -215,19 +220,47 @@ For a more robust system, use postgres (as used in our version).
 ## Step 6. NPM
 
 In order to get thumbnails of the protein in the galleries, or for when you share your protein on Twitter or Facebook, nodejs with puppeteer is required.
-![Facebook](./images/fb_thumb.jpg)
+![Facebook](https://github.com/matteoferla/MichelaNGLo-app/raw/master/git_docs/images/fb_thumb.jpg)
 
     npm install puppeteer
     npm install fs-extra
     
-Also, some of the submodules in `michelanglo_app/static/ThirdParty` need building. But this is only required for static offline downloads.
+Also, some of the submodules in `michelanglo_app/static/ThirdParty` need building —JQuery.
+But this is only required for static offline downloads.
 
 ## Step 7. Run
 
 ### Environment variables
 
-Having an config file with sensitive data on GitHub is a no-no, so there are lots of env variables used here.
-Where did you put the protein?
+Having an config file with sensitive data on GitHub is a no-no, so there are two options.
+The first is copying the config file and amend it.
+
+    cp production.ini actual.ini
+    python app.py --config actual.ini > ../mike.log 2>&1
+
+The other is to use environment variables, which will override the config. To pass an environment variable to a command
+one can do
+
+    FOO=foo command arg1 arg2;
+    
+The variable `$FOO` will be available within the command run, but not outside.
+There are lots of env variables usable and for some reason I decided to obey conventions, so here is the mapping:
+
+| config name                     | environ name             |
+|:--------------------------------|:-------------------------|
+| michelanglo.protein_data_folder | MICHELANGLO_PROTEIN_DATA |
+| michelanglo.user_data_folder    | MICHELANGLO_USER_DATA    |
+| michelanglo.secretcode          | MICHELANGLO_SECRETCODE   |
+| sqlalchemy.url                  | MICHELANGLO_SQL_URL      |
+| sentry.data_source_name         | MICHELANGLO_SENTRY_DNS   |
+| puppeteer.executablePath        | PUPPETEER_CHROME         |
+| slack.webhook                   | SLACK_WEBHOOK            |
+| michelanglo.admin_email         | MICHELANGLO_ADMIN_EMAIL  |
+| michelanglo.server_email        | MICHELANGLO_SERVER_EMAIL |
+
+These are:
+
+Where did you put the protein
 
     PROTEIN_DATA='/home/apps/protein-data'
     
@@ -253,16 +286,18 @@ Alternative you can run the application you want to feed the env variable withou
     SQL_URL=xxx;SECRETCODE=xxx;SLACK_WEBHOOK=xxx;PROTEIN_DATA=xxx python3 app.py --d
 
 ## Ghosts in the machine
-Run the script and make a user called `admin`.
+Run the script and make a user called `admin`. This is a one time only option.
 The users `trashcan` gets generated automatically when a guest makes a view and is blacklisted along with `guest` and `Anonymous`.
 
 ## Did you turn it off and on again?
-Set up a system daemon, or a cron job to make sure it comes back upon system failure.
+Set up a system daemon (as done in the SGC server), or a cron job to make sure it comes back upon system failure.
 Also, the app.py serves on port 8088.
 
-# Future
-## Rosetta
+## PyRosetta
 
-For Venus, pyrosetta will be optionally required.
+For Venus is required. PyRosetta is for academic use only and the username and password is obtained from https://www.rosettacommons.org/software/license-and-download
 
-    curl -o a.tar.gz  -u Academic_User:**** https://www.rosettacommons.org/downloads/academic/3.11/rosetta_bin_linux_3.11_bundle.tgz
+    curl -u $PYROSETTAUSER:$PYROSETTAPASSWORD https://graylab.jhu.edu/download/PyRosetta4/archive/release/PyRosetta4.Release.python3.8.ubuntu/PyRosetta4.Release.python3.8.ubuntu.release-295.tar.bz2 -o /content/a.tar.bz2
+    tar -xf a.tar.bz2
+    pip3 install -e PyRosetta4.Release.python3.8.ubuntu.release-295/setup/
+    rm a.tar.bz2
