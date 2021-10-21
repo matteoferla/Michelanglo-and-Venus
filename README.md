@@ -1,8 +1,6 @@
 # Michelanglo-and-Venus
 Topmost repository for [the Michelaɴɢʟo webapp](https://michelanglo.sgc.ox.ac.uk/), including the Venus functionality.
 
-> Data re-orgainisation in progress (5 Oct 2021)
-
 ## Overview
 Michelaɴɢʟo is a complex web app built in Python3 with the Pyramid framework that uses backed both PyMOL and PyRosetta,
 and contains a lot of data.
